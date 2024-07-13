@@ -22,13 +22,10 @@ ______                        _   _       _                      _     _       _
 
 **A set of challenges to learn offensive security of smart contracts in Ethereum.**
 
-This repository is a Foundry-based implementation of the original
-[Damn Vulnerable DeFi](https://github.com/tinchoabbate/damn-vulnerable-defi/tree/v3.0.0) project. The challenges feature
+This repository is Solutions of the
+[Foundry-based  Damn Vulnerable DeFi V3](https://github.com/EbiPenMan/foundry-damn-vulnerable-defi-v3) project. The challenges feature
 flash loans, price oracles, governance, NFTs, lending pools, smart contract wallets, timelocks, and more!
 
-## Play
-
-Visit [damnvulnerabledefi.xyz](https://damnvulnerabledefi.xyz) to access the challenges.
 
 ## How to Use
 
@@ -38,53 +35,22 @@ get started:
 ### Prerequisites
 
 - Install [Foundry](https://getfoundry.sh/).
+- Install [NodeJS](https://nodejs.org/en/download/package-manager).
 
 ### Installation
 
 1. Clone the repository:
 
    ```sh
-   git clone https://github.com/EbiPenMan/damn-vulnerable-defi-foundry
-   cd damn-vulnerable-defi-foundry
+   git clone https://github.com/EbiPenMan/foundry-damn-vulnerable-defi-v3-solutions
+   cd foundry-damn-vulnerable-defi-v3-solutions
    ```
 
 2. Install dependencies:
    ```sh
-   forge install
+    bun install # install Solhint, Prettier, and other Node.js deps
    ```
 
-### How to play
-
-- Code your solution in the \*.t.sol file (inside each challenge's folder in the test folder)
-- You only need to write your solution in the `_execution` method and run the test.
-- Run the challenge with `forge test --match-test test{challenge-name}`. If the test is executed successfully, you've
-  passed!
-
-### Tips
-
-- To code the solutions, you may need to read [Foundry](https://book.getfoundry.sh/getting-started/installation) docs.
-- In all challenges you must use the account called player. In `forge`, that may translate to using:
-
-```solidity
-// Sets msg.sender to the `player` address for the next call.
-vm.prank(player);
-...
-```
-
-or
-
-```solidity
-// Sets msg.sender for all subsequent calls until stopPrank is called.
-vm.startPrank(player);
-...
-vm.stopPrank();
-```
-
-- Some challenges require you to code and deploy custom smart contracts that you can use [this](src/player-contracts)
-  folder.
-- Go [here](https://github.com/tinchoabbate/damn-vulnerable-defi/discussions/categories/support-q-a-troubleshooting) for
-  troubleshooting, support and Q&A.
-- If you have any problem with `converted Foundry` scripts, You can create issue in this repo.
 
 ### Running Tests
 
@@ -103,13 +69,13 @@ forge test
 ### Todo List
 
 - [x] 1: Unstoppable
-- [ ] 2: Naive receiver
-- [ ] 3: Truster
-- [ ] 4: Side Entrance
-- [ ] 5: The Rewarder
-- [ ] 6: Selfie
-- [ ] 7: Compromised
-- [ ] 8: Puppet
+- [x] 2: Naive receiver
+- [x] 3: Truster
+- [x] 4: Side Entrance
+- [x] 5: The Rewarder
+- [x] 6: Selfie
+- [x] 7: Compromised
+- [x] 8: Puppet
 - [ ] 9: Puppet V2
 - [ ] 10: Free Rider
 - [ ] 11: Backdoor
