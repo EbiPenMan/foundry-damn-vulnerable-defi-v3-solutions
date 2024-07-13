@@ -5,7 +5,7 @@ import { PuppetPool } from "../../08_puppet-v1/PuppetPool.sol";
 import { DamnValuableToken } from "../../DamnValuableToken.sol";
 import { IUniswapV1Exchange } from "../../../build-uniswap/v1/IUniswapV1Exchange.sol";
 
-contract AttackPuppet {
+contract AttackPuppetV1 {
     receive() external payable { }
 
     function attack(

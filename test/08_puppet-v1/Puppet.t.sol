@@ -6,7 +6,7 @@ import { DamnValuableToken } from "../../src/DamnValuableToken.sol";
 import { PuppetPool } from "../../src/08_puppet-v1/PuppetPool.sol";
 import { IUniswapV1Exchange } from "../../build-uniswap/v1/IUniswapV1Exchange.sol";
 import { IUniswapV1Factory } from "../../build-uniswap/v1/IUniswapV1Factory.sol";
-import { AttackPuppet } from "../../src/player-contracts/08_puppet-v1/AttackPuppet.sol";
+import { AttackPuppetV1 } from "../../src/player-contracts/08_puppet-v1/AttackPuppetV1.sol";
 
 contract PuppetChallengeTest is Test {
     address public deployer;
@@ -75,7 +75,7 @@ contract PuppetChallengeTest is Test {
         address player2 = address(0x3);
 
         vm.prank(player2);
-        AttackPuppet attackerContract = new AttackPuppet();
+        AttackPuppetV1 attackerContract = new AttackPuppetV1();
 
         vm.prank(player);
         token.transfer(address(attackerContract), PLAYER_INITIAL_TOKEN_BALANCE - 1 ether);
@@ -88,7 +88,9 @@ contract PuppetChallengeTest is Test {
     }
 
     function testPuppetV1() public {
+        // vm.startBroadcast(player);
         _execution();
+        // vm.stopBroadcast();
 
         // SUCCESS CONDITIONS
 

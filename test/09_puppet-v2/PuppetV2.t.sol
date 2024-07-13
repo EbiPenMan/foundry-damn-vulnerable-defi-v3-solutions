@@ -8,6 +8,7 @@ import { WETH } from "../../src/WETH.sol";
 import { IUniswapV2Pair } from "../../build-uniswap/v2/IUniswapV2Pair.sol";
 import { IUniswapV2Factory } from "../../build-uniswap/v2/IUniswapV2Factory.sol";
 import { IUniswapV2Router02 } from "../../build-uniswap/v2/IUniswapV2Router02.sol";
+import { AttackPuppetV2 } from "../../src/player-contracts/09_puppet-v2/AttackPuppetV2.sol";
 
 contract PuppetV2ChallengeTest is Test {
     address public deployer;
@@ -70,9 +71,17 @@ contract PuppetV2ChallengeTest is Test {
     }
 
     function _execution() private {
+        vm.startPrank(player);
+
         /**
          * CODE YOUR SOLUTION HERE
          */
+        AttackPuppetV2 attackerContract = new AttackPuppetV2();
+
+        token.transfer(address(attackerContract), PLAYER_INITIAL_TOKEN_BALANCE - 1 ether);
+        attackerContract.attack{ value: PLAYER_INITIAL_ETH_BALANCE }(lendingPool, token, uniswapRouter, player);
+
+        vm.stopPrank();
     }
 
     function testPuppetV2() public {
