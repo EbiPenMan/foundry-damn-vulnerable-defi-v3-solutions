@@ -74,7 +74,7 @@ forge test
 - [x] 5: The Rewarder
 - [x] 6: Selfie
 - [x] 7: Compromised
-- [x] 8: Puppet
+- [x] 8: Puppet V1
 - [ ] 9: Puppet V2
 - [ ] 10: Free Rider
 - [ ] 11: Backdoor
