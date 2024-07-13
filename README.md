@@ -23,9 +23,9 @@ ______                        _   _       _                      _     _       _
 **A set of challenges to learn offensive security of smart contracts in Ethereum.**
 
 This repository is Solutions of the
-[Foundry-based  Damn Vulnerable DeFi V3](https://github.com/EbiPenMan/foundry-damn-vulnerable-defi-v3) project. The challenges feature
-flash loans, price oracles, governance, NFTs, lending pools, smart contract wallets, timelocks, and more!
-
+[Foundry-based Damn Vulnerable DeFi V3](https://github.com/EbiPenMan/foundry-damn-vulnerable-defi-v3) project. The
+challenges feature flash loans, price oracles, governance, NFTs, lending pools, smart contract wallets, timelocks, and
+more!
 
 ## How to Use
 
@@ -50,7 +50,6 @@ get started:
    ```sh
     bun install # install Solhint, Prettier, and other Node.js deps
    ```
-
 
 ### Running Tests
 

@@ -3,10 +3,10 @@ pragma solidity 0.8.26;
 
 import { Test } from "forge-std/Test.sol";
 import { DamnValuableToken } from "../../src/DamnValuableToken.sol";
-import { PuppetPool } from "../../src/08_puppet/PuppetPool.sol";
+import { PuppetPool } from "../../src/08_puppet-v1/PuppetPool.sol";
 import { IUniswapV1Exchange } from "../../build-uniswap/v1/IUniswapV1Exchange.sol";
 import { IUniswapV1Factory } from "../../build-uniswap/v1/IUniswapV1Factory.sol";
-import { AttackPuppet } from "../../src/player-contracts/08_puppet/AttackPuppet.sol";
+import { AttackPuppet } from "../../src/player-contracts/08_puppet-v1/AttackPuppet.sol";
 
 contract PuppetChallengeTest is Test {
     address public deployer;
