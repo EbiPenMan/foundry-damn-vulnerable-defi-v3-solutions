@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
-import "forge-std/Test.sol";
-import "@gnosis.pm/safe-contracts/contracts/GnosisSafe.sol";
-import "@gnosis.pm/safe-contracts/contracts/proxies/GnosisSafeProxyFactory.sol";
-import "../../src/DamnValuableToken.sol";
-import "../../src/11_backdoor/WalletRegistry.sol";
+import { Test } from "forge-std/Test.sol";
+import { GnosisSafe } from "@gnosis.pm/safe-contracts/contracts/GnosisSafe.sol";
+import { GnosisSafeProxyFactory } from "@gnosis.pm/safe-contracts/contracts/proxies/GnosisSafeProxyFactory.sol";
+import { DamnValuableToken } from "../../src/DamnValuableToken.sol";
+import { WalletRegistry } from "../../src/11_backdoor/WalletRegistry.sol";
 
 contract BackdoorChallengeTest is Test {
     address private deployer;

@@ -1,22 +1,21 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
-import "forge-std/Test.sol";
-import "forge-std/console.sol";
-import "../../src/DamnValuableToken.sol";
-import "../../src/01_unstoppable/UnstoppableVault.sol";
-import "../../src/01_unstoppable/ReceiverUnstoppable.sol";
+import { Test } from "forge-std/Test.sol";
+import { DamnValuableToken, ERC20 } from "../../src/DamnValuableToken.sol";
+import { UnstoppableVault } from "../../src/01_unstoppable/UnstoppableVault.sol";
+import { ReceiverUnstoppable } from "../../src/01_unstoppable/ReceiverUnstoppable.sol";
 
 contract Unstoppable is Test {
-    DamnValuableToken token;
-    UnstoppableVault vault;
-    ReceiverUnstoppable receiverContract;
-    address deployer;
-    address player;
-    address someUser;
+    DamnValuableToken public token;
+    UnstoppableVault public vault;
+    ReceiverUnstoppable public receiverContract;
+    address public deployer;
+    address public player;
+    address public someUser;
 
-    uint256 constant TOKENS_IN_VAULT = 1_000_000 * 10 ** 18;
-    uint256 constant INITIAL_PLAYER_TOKEN_BALANCE = 10 * 10 ** 18;
+    uint256 public constant TOKENS_IN_VAULT = 1_000_000 * 10 ** 18;
+    uint256 public constant INITIAL_PLAYER_TOKEN_BALANCE = 10 * 10 ** 18;
 
     function setUp() public {
         deployer = address(this);
@@ -49,6 +48,8 @@ contract Unstoppable is Test {
 
         // Deploy receiver contract and execute initial flash loan
         vm.startPrank(someUser);
+
+        // solhint-disable-next-line reentrancy
         receiverContract = new ReceiverUnstoppable(address(vault));
         receiverContract.executeFlashLoan(100 * 10 ** 18);
         vm.stopPrank();

@@ -2,9 +2,9 @@
 
 pragma solidity 0.8.26;
 
-import "@openzeppelin/contracts/utils/Address.sol";
-import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
-import "../DamnValuableToken.sol";
+import { Address } from "@openzeppelin/contracts/utils/Address.sol";
+import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import { DamnValuableToken } from "../DamnValuableToken.sol";
 
 /**
  * @title TrusterLenderPool
@@ -13,12 +13,12 @@ import "../DamnValuableToken.sol";
 contract TrusterLenderPool is ReentrancyGuard {
     using Address for address;
 
-    DamnValuableToken public immutable token;
+    DamnValuableToken public immutable TOKEN;
 
     error RepayFailed();
 
     constructor(DamnValuableToken _token) {
-        token = _token;
+        TOKEN = _token;
     }
 
     function flashLoan(
@@ -31,12 +31,12 @@ contract TrusterLenderPool is ReentrancyGuard {
         nonReentrant
         returns (bool)
     {
-        uint256 balanceBefore = token.balanceOf(address(this));
+        uint256 balanceBefore = TOKEN.balanceOf(address(this));
 
-        token.transfer(borrower, amount);
+        TOKEN.transfer(borrower, amount);
         target.functionCall(data);
 
-        if (token.balanceOf(address(this)) < balanceBefore) {
+        if (TOKEN.balanceOf(address(this)) < balanceBefore) {
             revert RepayFailed();
         }
 

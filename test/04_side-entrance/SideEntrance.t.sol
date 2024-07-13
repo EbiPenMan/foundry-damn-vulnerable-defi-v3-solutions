@@ -1,18 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
-import "forge-std/Test.sol";
-import "forge-std/console.sol";
-import "../../src/04_side-entrance/SideEntranceLenderPool.sol";
-import "../../src/player-contracts/04_side-entrance/AttackSideEntrance.sol";
+import { Test } from "forge-std/Test.sol";
+import { SideEntranceLenderPool } from "../../src/04_side-entrance/SideEntranceLenderPool.sol";
+import { AttackSideEntrance } from "../../src/player-contracts/04_side-entrance/AttackSideEntrance.sol";
 
 contract SideEntrance is Test {
-    SideEntranceLenderPool pool;
-    address deployer;
-    address player;
+    SideEntranceLenderPool public pool;
+    address public deployer;
+    address public player;
 
-    uint256 constant ETHER_IN_POOL = 1000 ether;
-    uint256 constant PLAYER_INITIAL_ETH_BALANCE = 1 ether;
+    uint256 public constant ETHER_IN_POOL = 1000 ether;
+    uint256 public constant PLAYER_INITIAL_ETH_BALANCE = 1 ether;
 
     function setUp() public {
         deployer = address(this);

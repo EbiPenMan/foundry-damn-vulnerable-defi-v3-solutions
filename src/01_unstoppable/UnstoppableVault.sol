@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
-import "solmate/src/utils/FixedPointMathLib.sol";
-import "solmate/src/utils/ReentrancyGuard.sol";
+import { FixedPointMathLib } from "solmate/src/utils/FixedPointMathLib.sol";
+import { ReentrancyGuard } from "solmate/src/utils/ReentrancyGuard.sol";
 import { SafeTransferLib, ERC4626, ERC20 } from "solmate/src/mixins/ERC4626.sol";
-import "solmate/src/auth/Owned.sol";
+import { Owned } from "solmate/src/auth/Owned.sol";
 import { IERC3156FlashBorrower, IERC3156FlashLender } from "@openzeppelin/contracts/interfaces/IERC3156.sol";
 
 /**
@@ -18,7 +18,7 @@ contract UnstoppableVault is IERC3156FlashLender, ReentrancyGuard, Owned, ERC462
     uint256 public constant FEE_FACTOR = 0.05 ether;
     uint64 public constant GRACE_PERIOD = 30 days;
 
-    uint64 public immutable end = uint64(block.timestamp) + GRACE_PERIOD;
+    uint64 public immutable END = uint64(block.timestamp) + GRACE_PERIOD;
 
     address public feeRecipient;
 
@@ -60,7 +60,7 @@ contract UnstoppableVault is IERC3156FlashLender, ReentrancyGuard, Owned, ERC462
             revert UnsupportedCurrency();
         }
 
-        if (block.timestamp < end && _amount < maxFlashLoan(_token)) {
+        if (block.timestamp < END && _amount < maxFlashLoan(_token)) {
             return 0;
         } else {
             return _amount.mulWadUp(FEE_FACTOR);

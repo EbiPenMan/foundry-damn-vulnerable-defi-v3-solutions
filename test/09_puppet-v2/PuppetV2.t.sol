@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
-import "forge-std/Test.sol";
-import "../../src/DamnValuableToken.sol";
-import "../../src/09_puppet-v2/PuppetV2Pool.sol";
-import "../../src/WETH.sol";
-import "../../build-uniswap/v2/IUniswapV2Pair.sol";
-import "../../build-uniswap/v2/IUniswapV2Factory.sol";
-import "../../build-uniswap/v2/IUniswapV2Router02.sol";
+import { Test } from "forge-std/Test.sol";
+import { DamnValuableToken } from "../../src/DamnValuableToken.sol";
+import { PuppetV2Pool } from "../../src/09_puppet-v2/PuppetV2Pool.sol";
+import { WETH } from "../../src/WETH.sol";
+import { IUniswapV2Pair } from "../../build-uniswap/v2/IUniswapV2Pair.sol";
+import { IUniswapV2Factory } from "../../build-uniswap/v2/IUniswapV2Factory.sol";
+import { IUniswapV2Router02 } from "../../build-uniswap/v2/IUniswapV2Router02.sol";
 
 contract PuppetV2ChallengeTest is Test {
-    address deployer;
-    address player;
+    address public deployer;
+    address public player;
     DamnValuableToken internal token;
     WETH internal weth;
     IUniswapV2Factory internal uniswapFactory;
@@ -19,11 +19,11 @@ contract PuppetV2ChallengeTest is Test {
     IUniswapV2Pair internal uniswapExchange;
     PuppetV2Pool internal lendingPool;
 
-    uint256 constant UNISWAP_INITIAL_TOKEN_RESERVE = 100 ether;
-    uint256 constant UNISWAP_INITIAL_WETH_RESERVE = 10 ether;
-    uint256 constant PLAYER_INITIAL_TOKEN_BALANCE = 10_000 ether;
-    uint256 constant PLAYER_INITIAL_ETH_BALANCE = 20 ether;
-    uint256 constant POOL_INITIAL_TOKEN_BALANCE = 1_000_000 ether;
+    uint256 public constant UNISWAP_INITIAL_TOKEN_RESERVE = 100 ether;
+    uint256 public constant UNISWAP_INITIAL_WETH_RESERVE = 10 ether;
+    uint256 public constant PLAYER_INITIAL_TOKEN_BALANCE = 10_000 ether;
+    uint256 public constant PLAYER_INITIAL_ETH_BALANCE = 20 ether;
+    uint256 public constant POOL_INITIAL_TOKEN_BALANCE = 1_000_000 ether;
 
     function setUp() public {
         deployer = address(this);

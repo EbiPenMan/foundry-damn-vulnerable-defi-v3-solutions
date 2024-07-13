@@ -2,7 +2,7 @@
 
 pragma solidity 0.8.26;
 
-import "solady/src/utils/SafeTransferLib.sol";
+import { SafeTransferLib } from "solady/src/utils/SafeTransferLib.sol";
 
 interface IFlashLoanEtherReceiver {
     function execute() external payable;
@@ -13,7 +13,7 @@ interface IFlashLoanEtherReceiver {
  * @author Damn Vulnerable DeFi (https://damnvulnerabledefi.xyz)
  */
 contract SideEntranceLenderPool {
-    mapping(address => uint256) private balances;
+    mapping(address addressKey => uint256 balanceValue) private balances;
 
     error RepayFailed();
 

@@ -1,17 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
-import "forge-std/Test.sol";
-import "forge-std/console.sol";
-import "../../src/DamnValuableTokenSnapshot.sol";
-import "../../src/06_selfie/SimpleGovernance.sol";
-import "../../src/06_selfie/SelfiePool.sol";
-import "../../src/player-contracts/06_selfie/AttackSelfie.sol";
+import { Test } from "forge-std/Test.sol";
+import { DamnValuableTokenSnapshot } from "../../src/DamnValuableTokenSnapshot.sol";
+import { SimpleGovernance } from "../../src/06_selfie/SimpleGovernance.sol";
+import { SelfiePool } from "../../src/06_selfie/SelfiePool.sol";
+import { AttackSelfie } from "../../src/player-contracts/06_selfie/AttackSelfie.sol";
 
 contract Selfie is Test {
-    address deployer;
-    address user;
-    address player;
+    address public deployer;
+    address public user;
+    address public player;
 
     DamnValuableTokenSnapshot internal token;
     SimpleGovernance internal governance;
@@ -38,8 +37,8 @@ contract Selfie is Test {
 
         // Deploy the pool
         pool = new SelfiePool(address(token), address(governance));
-        assertEq(address(pool.token()), address(token));
-        assertEq(address(pool.governance()), address(governance));
+        assertEq(address(pool.TOKEN()), address(token));
+        assertEq(address(pool.GOVERNANCE()), address(governance));
 
         // Fund the pool
         token.transfer(address(pool), TOKENS_IN_POOL);

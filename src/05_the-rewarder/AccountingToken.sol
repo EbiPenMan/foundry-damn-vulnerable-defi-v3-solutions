@@ -2,8 +2,8 @@
 
 pragma solidity 0.8.26;
 
-import "../openzeppelin-contracts-v4/ERC20Snapshot.sol";
-import "solady/src/auth/OwnableRoles.sol";
+import { ERC20Snapshot, ERC20 } from "../openzeppelin-contracts-v4/ERC20Snapshot.sol";
+import { OwnableRoles } from "solady/src/auth/OwnableRoles.sol";
 
 /**
  * @title AccountingToken

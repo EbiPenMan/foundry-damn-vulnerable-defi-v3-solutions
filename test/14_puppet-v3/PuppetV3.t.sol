@@ -1,38 +1,37 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
-import "forge-std/Test.sol";
-import "forge-std/console.sol";
+import { Test } from "forge-std/Test.sol";
 import { ERC20 } from "solmate/src/tokens/ERC20.sol";
-import "../../build-uniswap/v3/INonfungiblePositionManager.sol";
+import { INonfungiblePositionManager } from "../../build-uniswap/v3/INonfungiblePositionManager.sol";
 
-import "../../build-uniswap/v3/IUniswapV3Factory.sol";
-import "../../build-uniswap/v3/IUniswapV3Pool.sol";
+import { IUniswapV3Factory } from "../../build-uniswap/v3/IUniswapV3Factory.sol";
+import { IUniswapV3Pool } from "../../build-uniswap/v3/IUniswapV3Pool.sol";
 
-import "../../src/WETH.sol";
-import "../../src/DamnValuableToken.sol";
-import "../../src/14_puppet-v3/PuppetV3Pool.sol";
+import { WETH } from "../../src/WETH.sol";
+import { DamnValuableToken } from "../../src/DamnValuableToken.sol";
+import { PuppetV3Pool } from "../../src/14_puppet-v3/PuppetV3Pool.sol";
 
 contract PuppetV3Test is Test {
-    INonfungiblePositionManager uniswapPositionManager;
-    IUniswapV3Factory uniswapFactory;
-    IUniswapV3Pool uniswapPool;
-    DamnValuableToken token;
-    WETH weth;
-    PuppetV3Pool lendingPool;
-    address deployer;
-    address player;
-    uint256 initialBlockTimestamp;
+    INonfungiblePositionManager public uniswapPositionManager;
+    IUniswapV3Factory public uniswapFactory;
+    IUniswapV3Pool public uniswapPool;
+    DamnValuableToken public token;
+    WETH public weth;
+    PuppetV3Pool public lendingPool;
+    address public deployer;
+    address public player;
+    uint256 public initialBlockTimestamp;
 
     // Initial liquidity amounts for Uniswap v3 pool
-    uint256 constant UNISWAP_INITIAL_TOKEN_LIQUIDITY = 100e18;
-    uint256 constant UNISWAP_INITIAL_WETH_LIQUIDITY = 100e18;
+    uint256 public constant UNISWAP_INITIAL_TOKEN_LIQUIDITY = 100e18;
+    uint256 public constant UNISWAP_INITIAL_WETH_LIQUIDITY = 100e18;
 
-    uint256 constant PLAYER_INITIAL_TOKEN_BALANCE = 110e18;
-    uint256 constant PLAYER_INITIAL_ETH_BALANCE = 1e18;
-    uint256 constant DEPLOYER_INITIAL_ETH_BALANCE = 200e18;
+    uint256 public constant PLAYER_INITIAL_TOKEN_BALANCE = 110e18;
+    uint256 public constant PLAYER_INITIAL_ETH_BALANCE = 1e18;
+    uint256 public constant DEPLOYER_INITIAL_ETH_BALANCE = 200e18;
 
-    uint256 constant LENDING_POOL_INITIAL_TOKEN_BALANCE = 1_000_000e18;
+    uint256 public constant LENDING_POOL_INITIAL_TOKEN_BALANCE = 1_000_000e18;
 
     function setUp() public {
         // Initialize deployer account
@@ -70,7 +69,7 @@ contract PuppetV3Test is Test {
             address(0xC36442b4a4522E871399CD717aBDD847Ab11FE88)
         );
         uniswapPositionManager = INonfungiblePositionManager(address(0xC36442b4a4522E871399CD717aBDD847Ab11FE88));
-        uint24 FEE = 3000; // 0.3%
+        uint24 fee = 3000; // 0.3%
         address token0 = address(weth);
         address token1 = address(token);
         (token0, token1) = token0 < token1 ? (token0, token1) : (token1, token0);
@@ -78,11 +77,11 @@ contract PuppetV3Test is Test {
         uniswapPositionManager.createAndInitializePoolIfNecessary(
             token0, // token0
             token1, // token1
-            FEE,
+            fee,
             encodePriceSqrt(1, 1)
         );
 
-        address uniswapPoolAddress = uniswapFactory.getPool(address(weth), address(token), FEE);
+        address uniswapPoolAddress = uniswapFactory.getPool(address(weth), address(token), fee);
         uniswapPool = IUniswapV3Pool(uniswapPoolAddress);
         uniswapPool.increaseObservationCardinalityNext(40);
 
@@ -104,7 +103,7 @@ contract PuppetV3Test is Test {
                 token1: token1,
                 tickLower: -60,
                 tickUpper: 60,
-                fee: FEE,
+                fee: fee,
                 recipient: deployer,
                 amount0Desired: amount0Desired,
                 amount1Desired: amount1Desired,
@@ -137,6 +136,7 @@ contract PuppetV3Test is Test {
         // Ensure player doesn't have that much ETH
         assertLt(player.balance, LENDING_POOL_INITIAL_TOKEN_BALANCE * 3);
 
+        // solhint-disable-next-line reentrancy
         initialBlockTimestamp = block.timestamp;
         vm.stopPrank();
     }
@@ -171,33 +171,5 @@ contract PuppetV3Test is Test {
         // Player has taken all tokens out of the pool
         assertEq(token.balanceOf(address(lendingPool)), 0);
         assertGe(token.balanceOf(player), LENDING_POOL_INITIAL_TOKEN_BALANCE);
-    }
-
-    function deployBytecodeWithArgs(
-        string memory fileName,
-        bytes memory constructorArgs
-    )
-        public
-        returns (address contractAddress)
-    {
-        // Load the bytecode from JSON file
-        string memory root = vm.projectRoot();
-        string memory path = string.concat(root, "/build-uniswap/v3/", fileName);
-        string memory json = vm.readFile(path);
-
-        // Parse bytecode
-        bytes memory bytecode = stdJson.readBytes(json, ".evm.bytecode.object");
-
-        // Combine bytecode and constructorArgs
-        bytes memory bytecodeWithArgs = abi.encodePacked(bytecode, constructorArgs);
-
-        assembly {
-            contractAddress := create(0, add(bytecode, 0x20), mload(bytecodeWithArgs))
-            // if iszero(extcodesize(contractAddress)) {
-            //     returndatacopy(0, 0, returndatasize())
-            //     revert(0, returndatasize())
-            // }
-        }
-        require(contractAddress != address(0), "Deployment failed");
     }
 }

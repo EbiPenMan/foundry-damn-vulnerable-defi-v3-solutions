@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
-import "forge-std/Test.sol";
-import "../../src/WETH.sol";
-import "../../build-uniswap/v2/IUniswapV2Pair.sol";
-import "../../build-uniswap/v2/IUniswapV2Factory.sol";
-import "../../build-uniswap/v2/IUniswapV2Router02.sol";
-import "../../src/10_free-rider/FreeRiderNFTMarketplace.sol";
-import "../../src/10_free-rider/FreeRiderRecovery.sol";
-import "../../src/DamnValuableToken.sol";
-import "../../src/DamnValuableNFT.sol";
+import { Test } from "forge-std/Test.sol";
+import { WETH } from "../../src/WETH.sol";
+import { IUniswapV2Pair } from "../../build-uniswap/v2/IUniswapV2Pair.sol";
+import { IUniswapV2Factory } from "../../build-uniswap/v2/IUniswapV2Factory.sol";
+import { IUniswapV2Router02 } from "../../build-uniswap/v2/IUniswapV2Router02.sol";
+import { FreeRiderNFTMarketplace } from "../../src/10_free-rider/FreeRiderNFTMarketplace.sol";
+import { FreeRiderRecovery } from "../../src/10_free-rider/FreeRiderRecovery.sol";
+import { DamnValuableToken } from "../../src/DamnValuableToken.sol";
+import { DamnValuableNFT } from "../../src/DamnValuableNFT.sol";
 
 contract FreeRiderChallengeTest is Test {
     address private deployer;
@@ -54,7 +54,8 @@ contract FreeRiderChallengeTest is Test {
         token = new DamnValuableToken();
 
         // Deploy Uniswap Factory and Router
-        uniswapFactory = IUniswapV2Factory(deployCode("build-uniswap/v2/UniswapV2Factory.json", abi.encode(address(0))));
+        uniswapFactory =
+            IUniswapV2Factory(deployCode("build-uniswap/v2/UniswapV2Factory.json", abi.encode(address(0))));
         uniswapRouter = IUniswapV2Router02(
             deployCode("build-uniswap/v2/UniswapV2Router02.json", abi.encode(address(uniswapFactory), address(weth)))
         );

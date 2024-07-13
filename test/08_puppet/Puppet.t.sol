@@ -1,28 +1,26 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
-import "forge-std/Test.sol";
-import "forge-std/Vm.sol";
-import "forge-std/StdJson.sol";
-import "../../src/DamnValuableToken.sol";
-import "../../src/08_puppet/PuppetPool.sol";
-import "../../build-uniswap/v1/IUniswapV1Exchange.sol";
-import "../../build-uniswap/v1/IUniswapV1Factory.sol";
-import "../../src/player-contracts/08_puppet/AttackPuppet.sol";
+import { Test } from "forge-std/Test.sol";
+import { DamnValuableToken } from "../../src/DamnValuableToken.sol";
+import { PuppetPool } from "../../src/08_puppet/PuppetPool.sol";
+import { IUniswapV1Exchange } from "../../build-uniswap/v1/IUniswapV1Exchange.sol";
+import { IUniswapV1Factory } from "../../build-uniswap/v1/IUniswapV1Factory.sol";
+import { AttackPuppet } from "../../src/player-contracts/08_puppet/AttackPuppet.sol";
 
 contract PuppetChallengeTest is Test {
-    address deployer;
-    address player;
+    address public deployer;
+    address public player;
     DamnValuableToken internal token;
     IUniswapV1Exchange internal uniswapExchange;
     IUniswapV1Factory internal uniswapFactory;
     PuppetPool internal lendingPool;
 
-    uint256 constant UNISWAP_INITIAL_TOKEN_RESERVE = 10 ether;
-    uint256 constant UNISWAP_INITIAL_ETH_RESERVE = 10 ether;
-    uint256 constant PLAYER_INITIAL_TOKEN_BALANCE = 1000 ether;
-    uint256 constant PLAYER_INITIAL_ETH_BALANCE = 25 ether;
-    uint256 constant POOL_INITIAL_TOKEN_BALANCE = 100_000 ether;
+    uint256 public constant UNISWAP_INITIAL_TOKEN_RESERVE = 10 ether;
+    uint256 public constant UNISWAP_INITIAL_ETH_RESERVE = 10 ether;
+    uint256 public constant PLAYER_INITIAL_TOKEN_BALANCE = 1000 ether;
+    uint256 public constant PLAYER_INITIAL_ETH_BALANCE = 25 ether;
+    uint256 public constant POOL_INITIAL_TOKEN_BALANCE = 100_000 ether;
 
     function setUp() public {
         deployer = address(this);
@@ -35,8 +33,8 @@ contract PuppetChallengeTest is Test {
         token = new DamnValuableToken();
 
         // Deploy a exchange that will be used as the factory template
-        uniswapFactory = IUniswapV1Factory(deployBytecode("UniswapV1Factory.json"));
-        uniswapExchange = IUniswapV1Exchange(deployBytecode("UniswapV1Exchange.json"));
+        uniswapFactory = IUniswapV1Factory(deployCode("build-uniswap/v1/UniswapV1Factory.json"));
+        uniswapExchange = IUniswapV1Exchange(deployCode("build-uniswap/v1/UniswapV1Exchange.json"));
         uniswapFactory.initializeFactory(address(uniswapExchange));
 
         // Create a new exchange for the token, and retrieve the deployed exchange's address
@@ -113,24 +111,5 @@ contract PuppetChallengeTest is Test {
         returns (uint256)
     {
         return (tokensSold * 997 * etherInReserve) / (tokensInReserve * 1000 + tokensSold * 997);
-    }
-
-    function deployBytecode(string memory fileName) public returns (address contractAddress) {
-        // Load the bytecode from JSON file
-        string memory root = vm.projectRoot();
-        string memory path = string.concat(root, "/build-uniswap/v1/", fileName);
-        string memory json = vm.readFile(path);
-
-        // Parse bytecode
-        bytes memory bytecode = stdJson.readBytes(json, ".evm.bytecode.object");
-
-        assembly {
-            contractAddress := create(0, add(bytecode, 0x20), mload(bytecode))
-            // if iszero(extcodesize(contractAddress)) {
-            //     returndatacopy(0, 0, returndatasize())
-            //     revert(0, returndatasize())
-            // }
-        }
-        require(contractAddress != address(0), "Deployment failed");
     }
 }

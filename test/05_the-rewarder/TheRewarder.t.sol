@@ -1,30 +1,30 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
-import "forge-std/Test.sol";
-import "forge-std/console.sol";
-import "../../src/DamnValuableToken.sol";
+import { Test } from "forge-std/Test.sol";
+import { console } from "forge-std/console.sol";
+import { DamnValuableToken } from "../../src/DamnValuableToken.sol";
 import { TheRewarderPool } from "../../src/05_the-rewarder/TheRewarderPool.sol";
 import { RewardToken } from "../../src/05_the-rewarder/RewardToken.sol";
 import { FlashLoanerPool } from "../../src/05_the-rewarder/FlashLoanerPool.sol";
 import { AccountingToken } from "../../src/05_the-rewarder/AccountingToken.sol";
-import "../../src/player-contracts/05_the-rewarder/AttackTheRewarder.sol";
+import { AttackTheRewarder } from "../../src/player-contracts/05_the-rewarder/AttackTheRewarder.sol";
 
 contract TheRewarde is Test {
-    DamnValuableToken liquidityToken;
-    FlashLoanerPool flashLoanPool;
-    TheRewarderPool rewarderPool;
-    RewardToken rewardToken;
-    AccountingToken accountingToken;
-    address deployer;
-    address alice;
-    address bob;
-    address charlie;
-    address david;
-    address player;
-    address[] users;
+    DamnValuableToken public liquidityToken;
+    FlashLoanerPool public flashLoanPool;
+    TheRewarderPool public rewarderPool;
+    RewardToken public rewardToken;
+    AccountingToken public accountingToken;
+    address public deployer;
+    address public alice;
+    address public bob;
+    address public charlie;
+    address public david;
+    address public player;
+    address[] public users;
 
-    uint256 constant TOKENS_IN_LENDER_POOL = 1_000_000 ether;
+    uint256 public constant TOKENS_IN_LENDER_POOL = 1_000_000 ether;
 
     function setUp() public {
         deployer = address(this);
@@ -39,8 +39,8 @@ contract TheRewarde is Test {
         liquidityToken = new DamnValuableToken();
         flashLoanPool = new FlashLoanerPool(address(liquidityToken));
         rewarderPool = new TheRewarderPool(address(liquidityToken));
-        rewardToken = RewardToken(rewarderPool.rewardToken());
-        accountingToken = AccountingToken(rewarderPool.accountingToken());
+        rewardToken = RewardToken(rewarderPool.REWARD_TOKEN());
+        accountingToken = AccountingToken(rewarderPool.ACCOUNTING_TOKEN());
 
         // Set initial token balance of the pool offering flash loans
         liquidityToken.transfer(address(flashLoanPool), TOKENS_IN_LENDER_POOL);

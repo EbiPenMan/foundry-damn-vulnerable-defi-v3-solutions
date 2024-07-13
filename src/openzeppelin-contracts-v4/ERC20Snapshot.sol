@@ -3,9 +3,9 @@
 
 pragma solidity 0.8.26;
 
-import "./ERC20.sol";
-import "@openzeppelin/contracts/utils/Arrays.sol";
-import "./Counters.sol";
+import { ERC20 } from "./ERC20.sol";
+import { Arrays } from "@openzeppelin/contracts/utils/Arrays.sol";
+import { Counters } from "./Counters.sol";
 
 /**
  * @dev This contract extends an ERC20 token with a snapshot mechanism. When a snapshot is created, the balances and
@@ -30,7 +30,8 @@ import "./Counters.sol";
  *
  * ==== Gas Costs
  *
- * Snapshots are efficient. Snapshot creation is _O(1)_. Retrieval of balances or total supply from a snapshot is _O(log
+ * Snapshots are efficient. Snapshot creation is _O(1)_. Retrieval of balances or total supply from a snapshot is
+ * _O(log
  * n)_ in the number of snapshots that have been created, although _n_ for a specific account will generally be much
  * smaller since identical balances in subsequent snapshots are stored as a single entry.
  *
@@ -52,7 +53,7 @@ abstract contract ERC20Snapshot is ERC20 {
         uint256[] values;
     }
 
-    mapping(address => Snapshots) private _accountBalanceSnapshots;
+    mapping(address add => Snapshots snapshot) private _accountBalanceSnapshots;
     Snapshots private _totalSupplySnapshots;
 
     // Snapshot ids increase monotonically, with the first value being 1. An id of 0 is invalid.
@@ -148,7 +149,8 @@ abstract contract ERC20Snapshot is ERC20 {
         //  to this id is the current one.
         //  b) The queried value was modified after the snapshot was taken. Therefore, there will be an entry with the
         //  requested id, and its value is the one to return.
-        //  c) More snapshots were created after the requested one, and the queried value was later modified. There will
+        //  c) More snapshots were created after the requested one, and the queried value was later modified. There
+        // will
         // be
         //  no entry for the requested id: the value that corresponds to it is that of the smallest snapshot id that is
         //  larger than the requested one.

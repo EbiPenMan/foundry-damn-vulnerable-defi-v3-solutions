@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
-import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
-import "../openzeppelin-contracts-v4/ERC20Snapshot.sol";
-import "@openzeppelin/contracts/interfaces/IERC3156FlashLender.sol";
-import "@openzeppelin/contracts/interfaces/IERC3156FlashBorrower.sol";
-import "./SimpleGovernance.sol";
+import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import { ERC20Snapshot } from "../openzeppelin-contracts-v4/ERC20Snapshot.sol";
+import { IERC3156FlashLender } from "@openzeppelin/contracts/interfaces/IERC3156FlashLender.sol";
+import { IERC3156FlashBorrower } from "@openzeppelin/contracts/interfaces/IERC3156FlashBorrower.sol";
+import { SimpleGovernance } from "./SimpleGovernance.sol";
 
 /**
  * @title SelfiePool
  * @author Damn Vulnerable DeFi (https://damnvulnerabledefi.xyz)
  */
 contract SelfiePool is ReentrancyGuard, IERC3156FlashLender {
-    ERC20Snapshot public immutable token;
-    SimpleGovernance public immutable governance;
+    ERC20Snapshot public immutable TOKEN;
+    SimpleGovernance public immutable GOVERNANCE;
     bytes32 private constant CALLBACK_SUCCESS = keccak256("ERC3156FlashBorrower.onFlashLoan");
 
     error RepayFailed();
@@ -24,26 +24,26 @@ contract SelfiePool is ReentrancyGuard, IERC3156FlashLender {
     event FundsDrained(address indexed receiver, uint256 amount);
 
     modifier onlyGovernance() {
-        if (msg.sender != address(governance)) {
+        if (msg.sender != address(GOVERNANCE)) {
             revert CallerNotGovernance();
         }
         _;
     }
 
     constructor(address _token, address _governance) {
-        token = ERC20Snapshot(_token);
-        governance = SimpleGovernance(_governance);
+        TOKEN = ERC20Snapshot(_token);
+        GOVERNANCE = SimpleGovernance(_governance);
     }
 
     function maxFlashLoan(address _token) external view returns (uint256) {
-        if (address(token) == _token) {
-            return token.balanceOf(address(this));
+        if (address(TOKEN) == _token) {
+            return TOKEN.balanceOf(address(this));
         }
         return 0;
     }
 
     function flashFee(address _token, uint256) external view returns (uint256) {
-        if (address(token) != _token) {
+        if (address(TOKEN) != _token) {
             revert UnsupportedCurrency();
         }
         return 0;
@@ -59,16 +59,16 @@ contract SelfiePool is ReentrancyGuard, IERC3156FlashLender {
         nonReentrant
         returns (bool)
     {
-        if (_token != address(token)) {
+        if (_token != address(TOKEN)) {
             revert UnsupportedCurrency();
         }
 
-        token.transfer(address(_receiver), _amount);
+        TOKEN.transfer(address(_receiver), _amount);
         if (_receiver.onFlashLoan(msg.sender, _token, _amount, 0, _data) != CALLBACK_SUCCESS) {
             revert CallbackFailed();
         }
 
-        if (!token.transferFrom(address(_receiver), address(this), _amount)) {
+        if (!TOKEN.transferFrom(address(_receiver), address(this), _amount)) {
             revert RepayFailed();
         }
 
@@ -76,8 +76,8 @@ contract SelfiePool is ReentrancyGuard, IERC3156FlashLender {
     }
 
     function emergencyExit(address receiver) external onlyGovernance {
-        uint256 amount = token.balanceOf(address(this));
-        token.transfer(receiver, amount);
+        uint256 amount = TOKEN.balanceOf(address(this));
+        TOKEN.transfer(receiver, amount);
 
         emit FundsDrained(receiver, amount);
     }

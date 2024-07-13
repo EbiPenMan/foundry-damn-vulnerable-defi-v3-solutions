@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
-import "solady/src/auth/Ownable.sol";
-import "solady/src/utils/SafeTransferLib.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@gnosis.pm/safe-contracts/contracts/GnosisSafe.sol";
-import "@gnosis.pm/safe-contracts/contracts/proxies/IProxyCreationCallback.sol";
+import { Ownable } from "solady/src/auth/Ownable.sol";
+import { SafeTransferLib } from "solady/src/utils/SafeTransferLib.sol";
+import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import { GnosisSafe } from "@gnosis.pm/safe-contracts/contracts/GnosisSafe.sol";
+import { IProxyCreationCallback } from "@gnosis.pm/safe-contracts/contracts/proxies/IProxyCreationCallback.sol";
+import { GnosisSafeProxy } from "@gnosis.pm/safe-contracts/contracts/proxies/GnosisSafeProxy.sol";
 
 /**
  * @title WalletRegistry
@@ -20,14 +21,14 @@ contract WalletRegistry is IProxyCreationCallback, Ownable {
     uint256 private constant EXPECTED_THRESHOLD = 1;
     uint256 private constant PAYMENT_AMOUNT = 10 ether;
 
-    address public immutable masterCopy;
-    address public immutable walletFactory;
-    IERC20 public immutable token;
+    address public immutable MASTER_COPY;
+    address public immutable WALLET_FACTORY;
+    IERC20 public immutable TOKEN;
 
-    mapping(address => bool) public beneficiaries;
+    mapping(address add => bool state) public beneficiaries;
 
     // owner => wallet
-    mapping(address => address) public wallets;
+    mapping(address owner => address wallet) public wallets;
 
     error NotEnoughFunds();
     error CallerNotFactory();
@@ -46,9 +47,9 @@ contract WalletRegistry is IProxyCreationCallback, Ownable {
     ) {
         _initializeOwner(msg.sender);
 
-        masterCopy = masterCopyAddress;
-        walletFactory = walletFactoryAddress;
-        token = IERC20(tokenAddress);
+        MASTER_COPY = masterCopyAddress;
+        WALLET_FACTORY = walletFactoryAddress;
+        TOKEN = IERC20(tokenAddress);
 
         for (uint256 i = 0; i < initialBeneficiaries.length;) {
             unchecked {
@@ -76,7 +77,7 @@ contract WalletRegistry is IProxyCreationCallback, Ownable {
         external
         override
     {
-        if (token.balanceOf(address(this)) < PAYMENT_AMOUNT) {
+        if (TOKEN.balanceOf(address(this)) < PAYMENT_AMOUNT) {
             // fail early
             revert NotEnoughFunds();
         }
@@ -84,11 +85,11 @@ contract WalletRegistry is IProxyCreationCallback, Ownable {
         address payable walletAddress = payable(proxy);
 
         // Ensure correct factory and master copy
-        if (msg.sender != walletFactory) {
+        if (msg.sender != WALLET_FACTORY) {
             revert CallerNotFactory();
         }
 
-        if (singleton != masterCopy) {
+        if (singleton != MASTER_COPY) {
             revert FakeMasterCopy();
         }
 
@@ -129,7 +130,7 @@ contract WalletRegistry is IProxyCreationCallback, Ownable {
         wallets[walletOwner] = walletAddress;
 
         // Pay tokens to the newly created wallet
-        SafeTransferLib.safeTransfer(address(token), walletAddress, PAYMENT_AMOUNT);
+        SafeTransferLib.safeTransfer(address(TOKEN), walletAddress, PAYMENT_AMOUNT);
     }
 
     function _getFallbackManager(address payable wallet) private view returns (address) {

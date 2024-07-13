@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
-import "../../08_puppet/PuppetPool.sol";
-import "forge-std/console.sol";
-import "../../DamnValuableToken.sol";
-import "../../../build-uniswap/v1/IUniswapV1Exchange.sol";
+import { PuppetPool } from "../../08_puppet/PuppetPool.sol";
+import { DamnValuableToken } from "../../DamnValuableToken.sol";
+import { IUniswapV1Exchange } from "../../../build-uniswap/v1/IUniswapV1Exchange.sol";
 
 contract AttackPuppet {
     receive() external payable { }

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
-import "@openzeppelin/contracts/access/extensions/AccessControlEnumerable.sol";
-import "solady/src/utils/LibSort.sol";
+import { AccessControlEnumerable } from "@openzeppelin/contracts/access/extensions/AccessControlEnumerable.sol";
+import { LibSort } from "solady/src/utils/LibSort.sol";
 
 /**
  * @title TrustfulOracle
@@ -16,7 +16,7 @@ contract TrustfulOracle is AccessControlEnumerable {
     bytes32 public constant INITIALIZER_ROLE = keccak256("INITIALIZER_ROLE");
 
     // Source address => (symbol => price)
-    mapping(address => mapping(string => uint256)) private _pricesBySource;
+    mapping(address source => mapping(string symbol => uint256 price)) private _pricesBySource;
 
     error NotEnoughSources();
 
@@ -47,7 +47,7 @@ contract TrustfulOracle is AccessControlEnumerable {
         onlyRole(INITIALIZER_ROLE)
     {
         // Only allow one (symbol, price) per source
-        require(sources.length == symbols.length && symbols.length == prices.length);
+        require(sources.length == symbols.length && symbols.length == prices.length, "Only allow one");
         for (uint256 i = 0; i < sources.length;) {
             unchecked {
                 _setPrice(sources[i], symbols[i], prices[i]);

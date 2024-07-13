@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import { Initializable } from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import { UUPSUpgradeable } from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import { OwnableUpgradeable } from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 /**
  * @title AuthorizerUpgradeable
  * @author Damn Vulnerable DeFi (https://damnvulnerabledefi.xyz)
  */
 contract AuthorizerUpgradeable is Initializable, OwnableUpgradeable, UUPSUpgradeable {
-    mapping(address => mapping(address => uint256)) private wards;
+    mapping(address usr => mapping(address aim => uint256 allowance)) private wards;
 
     event Rely(address indexed usr, address aim);
 
