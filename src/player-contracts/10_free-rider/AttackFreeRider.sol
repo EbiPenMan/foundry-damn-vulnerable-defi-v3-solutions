@@ -6,7 +6,6 @@ import { FreeRiderRecovery } from "../../10_free-rider/FreeRiderRecovery.sol";
 import { DamnValuableNFT } from "../../DamnValuableNFT.sol";
 import { IUniswapV2Pair } from "../../../build-uniswap/v2/IUniswapV2Pair.sol";
 import { WETH } from "../../WETH.sol";
-import { console } from "forge-std/console.sol";
 import { IERC721Receiver } from "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 
 contract AttackFreeRider {
@@ -54,7 +53,7 @@ contract AttackFreeRider {
 
         bytes memory data = abi.encode(player);
         for (uint256 i; i < 6; i++) {
-            token.safeTransferFrom(address(this), address(freeRiderRecovery), i,data);
+            token.safeTransferFrom(address(this), address(freeRiderRecovery), i, data);
         }
     }
 

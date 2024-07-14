@@ -119,13 +119,12 @@ contract FreeRiderChallengeTest is Test {
     }
 
     function _execution() private {
-        vm.startPrank(player,player);
+        vm.startPrank(player, player);
 
         /**
          * CODE YOUR SOLUTION HERE
          */
         AttackFreeRider attackerContract = new AttackFreeRider();
-
         attackerContract.attack{ value: 0.045 ether }(marketplace, nft, uniswapPair, player, weth, devsContract);
 
         vm.stopPrank();
@@ -147,7 +146,5 @@ contract FreeRiderChallengeTest is Test {
         assertLt(address(marketplace).balance, MARKETPLACE_INITIAL_ETH_BALANCE);
         assertGt(player.balance, BOUNTY);
         assertEq(address(devsContract).balance, 0);
-
-
     }
 }
